@@ -14,6 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-    - name: List available simulators
-        run: xcrun simctl list devices
+     # Step 3: Build app on a guaranteed simulator
+      - name: Build app
+        run: |
+          xcodebuild -project LLM_Promt_App.xcodeproj \
+                     -scheme LLM_Promt_App \
+                     -sdk iphonesimulator \
+                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=17.7' \
+                     clean build
 
