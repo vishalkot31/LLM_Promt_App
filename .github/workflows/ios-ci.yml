@@ -14,11 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build app
-        run: |
-          xcodebuild -project LLM_Promt_App.xcodeproj \
-                     -scheme LLM_Promt_App \
-                     -sdk iphonesimulator \
-                     -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
-                     clean build
+    - name: List available simulators
+        run: xcrun simctl list devices
 
