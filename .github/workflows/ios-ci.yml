@@ -13,12 +13,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-    - name: Build app
-        run: |
-            xcodebuild -project LLM_Promt_App.xcodeproj \
-               -scheme LLM_Promt_App \
-               -sdk iphonesimulator \
-               -destination "platform=iOS Simulator,name=iPhone 16,OS=26.2" \
-               clean build
 
+      - name: Build app
+        run: |
+          xcodebuild -project LLM_Promt_App.xcodeproj \
+                     -scheme LLM_Promt_App \
+                     -sdk iphonesimulator \
+                     -destination "platform=iOS Simulator,name=iPhone 16,OS=26.2" \
+                     clean build
 
