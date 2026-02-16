@@ -14,12 +14,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-     # Step 3: Build app on a guaranteed simulator
+    # Step 2: Find first available iPhone simulator dynamically
+      - name: Set simulator
+        id: set_simulator
+        run: |
+          # Get first available iPhone simulator (shutdown)
+          SIMULATOR=$(xcrun simctl list devices available | grep "iPhone" | grep -v "(Booted)" | head -n 1 | sed -E 's/^[[:space:]]+//;s/ .*//')
+          OS=$(xcrun simctl list devices available | grep "$SIMULATOR" | awk -F '[()]' '{print $2}' | head -n 1)
+          echo "SIMULATOR_NAME=$SIMULATOR" >> $GITHUB_ENV
+          echo "SIMULATOR_OS=$OS" >> $GITHUB_ENV
+          echo "Using simulator: $SIMULATOR with OS $OS"
+
+      # Step 3: Build app using dynamic simulator
       - name: Build app
         run: |
           xcodebuild -project LLM_Promt_App.xcodeproj \
                      -scheme LLM_Promt_App \
                      -sdk iphonesimulator \
-                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=17.7' \
+                     -destination "platform=iOS Simulator,name=$SIMULATOR_NAME,OS=$SIMULATOR_OS" \
                      clean build
 
