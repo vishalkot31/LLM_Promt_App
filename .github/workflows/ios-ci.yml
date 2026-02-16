@@ -19,5 +19,6 @@ jobs:
           xcodebuild -project LLM_Promt_App.xcodeproj \
                      -scheme LLM_Promt_App \
                      -sdk iphonesimulator \
-                   -destination 'platform=iOS Simulator,name=Any iOS Simulator Device'
+                     -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
                      clean build
+
