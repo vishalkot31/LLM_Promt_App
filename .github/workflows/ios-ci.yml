@@ -1,0 +1,23 @@
+name: iOS CI  # Name of your workflow
+
+on:
+  push:
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build app
+        run: |
+          xcodebuild -project LLM_Promt_App.xcodeproj \
+                     -scheme LLM_Promt_App \
+                     -sdk iphonesimulator \
+                     -destination 'platform=iOS Simulator,name=iPhone 14' \
+                     clean build
