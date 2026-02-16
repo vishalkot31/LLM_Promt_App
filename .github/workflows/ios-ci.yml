@@ -13,19 +13,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-    # Step 2: Find first available iPhone simulator dynamically
+        
+      # Step 2: Find first available iPhone simulator dynamically (with correct OS version)
       - name: Set simulator
         id: set_simulator
         run: |
-          # Get first available iPhone simulator (shutdown)
-          SIMULATOR=$(xcrun simctl list devices available | grep "iPhone" | grep -v "(Booted)" | head -n 1 | sed -E 's/^[[:space:]]+//;s/ .*//')
-          OS=$(xcrun simctl list devices available | grep "$SIMULATOR" | awk -F '[()]' '{print $2}' | head -n 1)
-          echo "SIMULATOR_NAME=$SIMULATOR" >> $GITHUB_ENV
-          echo "SIMULATOR_OS=$OS" >> $GITHUB_ENV
-          echo "Using simulator: $SIMULATOR with OS $OS"
+          # Get first available iPhone simulator line
+          SIM_LINE=$(xcrun simctl list devices available | grep "iPhone" | grep -v "(Booted)" | head -n 1)
+          # Extract simulator name
+          SIMULATOR_NAME=$(echo "$SIM_LINE" | sed -E 's/^[[:space:]]+([^()]*) .*/\1/')
+          # Extract OS version
+          SIMULATOR_OS=$(echo "$SIM_LINE" | sed -E 's/.*\(([^()]*)\)/\1/')
+          echo "SIMULATOR_NAME=$SIMULATOR_NAME" >> $GITHUB_ENV
+          echo "SIMULATOR_OS=$SIMULATOR_OS" >> $GITHUB_ENV
+          echo "Using simulator: $SIMULATOR_NAME with OS $SIMULATOR_OS"
 
-      # Step 3: Build app using dynamic simulator
+      # Step 3: Build app using correct simulator + OS version
       - name: Build app
         run: |
           xcodebuild -project LLM_Promt_App.xcodeproj \
